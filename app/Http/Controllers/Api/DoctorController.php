@@ -3,47 +3,34 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Doctor;
 use Illuminate\Http\Request;
 
 class DoctorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(['success'=>true,'data'=>Doctor::all()]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function show($id)
     {
-        //
+        $doctor = Doctor::findOrFail($id);
+        return response()->json(['success'=>true,'data'=>$doctor]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function search(Request $request)
     {
-        //
-    }
+        $query = Doctor::query();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        if ($request->has('specialty')) {
+            $query->where('specialty', $request->specialty);
+        }
+        if ($request->has('city')) {
+            $query->where('city', $request->city);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $doctors = $query->get();
+        return response()->json(['success'=>true,'data'=>$doctors]);
     }
 }
