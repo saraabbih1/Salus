@@ -11,10 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('doctors', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+      Schema::create('doctors', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->string('specialty');
+    $table->string('city');
+    $table->integer('yearsofexperience');
+    $table->decimal('consultation_price',8,2);
+    $table->json('available_days'); 
+    $table->timestamps();
+});
     }
 
     /**

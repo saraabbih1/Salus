@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('ai_health_advice', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->text('advice');
+            $table->text('symptoms');
             $table->timestamps();
         });
     }
