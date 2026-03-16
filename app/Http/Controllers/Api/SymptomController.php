@@ -3,47 +3,43 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreSymptomRequest;
+use App\Http\Requests\UpdateSymptomRequest;
+use App\Models\Symptom;
 
 class SymptomController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $symptoms = auth()->user()->symptoms;
+        return response()->json(['success'=>true,'data'=>$symptoms]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreSymptomRequest $request)
     {
-        //
+        $data = $request->validated();
+        $data['user_id'] = auth()->id();
+        $symptom = Symptom::create($data);
+        return response()->json(['success'=>true,'data'=>$symptom,'message'=>'Symptôme ajouté']);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $symptom = auth()->user()->symptoms()->findOrFail($id);
+        return response()->json(['success'=>true,'data'=>$symptom]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(UpdateSymptomRequest $request, $id)
     {
-        //
+        $symptom = auth()->user()->symptoms()->findOrFail($id);
+        $symptom->update($request->validated());
+        return response()->json(['success'=>true,'data'=>$symptom,'message'=>'Symptôme modifié']);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $symptom = auth()->user()->symptoms()->findOrFail($id);
+        $symptom->delete();
+        return response()->json(['success'=>true,'message'=>'Symptôme supprimé']);
     }
 }
