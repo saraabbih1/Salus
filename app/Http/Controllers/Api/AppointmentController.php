@@ -3,47 +3,43 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreAppointmentRequest;
+use App\Http\Requests\UpdateAppointmentRequest;
+use App\Models\Appointment;
 
 class AppointmentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $appointments = auth()->user()->appointments;
+        return response()->json(['success'=>true,'data'=>$appointments]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreAppointmentRequest $request)
     {
-        //
+        $data = $request->validated();
+        $data['user_id'] = auth()->id();
+        $appointment = Appointment::create($data);
+        return response()->json(['success'=>true,'data'=>$appointment,'message'=>'Rendez-vous créé']);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $appointment = auth()->user()->appointments()->findOrFail($id);
+        return response()->json(['success'=>true,'data'=>$appointment]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(UpdateAppointmentRequest $request, $id)
     {
-        //
+        $appointment = auth()->user()->appointments()->findOrFail($id);
+        $appointment->update($request->validated());
+        return response()->json(['success'=>true,'data'=>$appointment,'message'=>'Rendez-vous modifié']);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $appointment = auth()->user()->appointments()->findOrFail($id);
+        $appointment->delete();
+        return response()->json(['success'=>true,'message'=>'Rendez-vous annulé']);
     }
 }
