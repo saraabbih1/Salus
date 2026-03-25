@@ -1,11 +1,54 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use App\Models\Symptom;
+use App\Models\AiAdvice;
 
-class AiHealthAdviceController extends Controller
+class AIHealthAdviceController extends Controller
 {
-    //
-}
+    public function generate(Request $request)
+    {
+        $user = $request->user();
+
+        //  récupérer les symptômes récents
+        $symptoms = Symptom::where('user_id', $user->id)
+            ->latest()
+            ->take(5)
+            ->pluck('name')
+            ->toArray();
+
+        if (empty($symptoms)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Aucun symptôme trouvé'
+            ], 400);
+        }
+
+        //  construire prompt
+        $symptomsText = implode(", ", $symptoms);
+
+        $prompt = "User symptoms: $symptomsText. Provide general wellness advice, not medical diagnosis.";
+
+        //  appel API Openai
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('OPENAI_API_KEY'),
+        ])->post('https://api.openai.com/v1/chat/completions', [
+            'model' => 'gpt-4o-mini',
+            'messages' => [
+                ['role' => 'user', 'content' => $prompt]
+            ],
+        ]);
+
+        if (!$response->successful()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur API IA'
+            ], 500);
+        }
+
+        $advice = $response['choices'][0]['message']['content'];
+
+        
