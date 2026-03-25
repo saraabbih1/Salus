@@ -50,5 +50,38 @@ class AIHealthAdviceController extends Controller
         }
 
         $advice = $response['choices'][0]['message']['content'];
+         //  sauvegarder en base
+        $aiAdvice = AiAdvice::create([
+            'user_id' => $user->id,
+            'advice' => $advice,
+            'symptoms_used' => json_encode($symptoms),
+            'generated_at' => now(),
+        ]);
+
+        //  retourner réponse
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'advice' => $aiAdvice->advice,
+                'generated_at' => $aiAdvice->generated_at,
+            ],
+            'message' => 'Conseil généré avec succès'
+        ]);
+    }
+
+    // history
+    public function index(Request $request)
+    {
+        $advices = AiAdvice::where('user_id', $request->user()->id)
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $advices,
+            'message' => 'Historique récupéré'
+        ]);
+    }
+}
 
         
