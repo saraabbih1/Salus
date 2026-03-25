@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSymptomRequest;
 use App\Http\Requests\UpdateSymptomRequest;
 use App\Models\Symptom;
+use Illuminate\Support\Facades\Auth;
 
 class SymptomController extends Controller
 {
@@ -15,13 +16,19 @@ class SymptomController extends Controller
         return response()->json(['success'=>true,'data'=>$symptoms]);
     }
 
-    public function store(StoreSymptomRequest $request)
-    {
-        $data = $request->validated();
-        $data['user_id'] = auth()->id();
-        $symptom = Symptom::create($data);
-        return response()->json(['success'=>true,'data'=>$symptom,'message'=>'Symptôme ajouté']);
-    }
+   public function store(StoreSymptomRequest $request)
+{
+    $symptom = Symptom::create([
+        'user_id' => Auth::id(), 
+        'name' => $request->name,
+        'severity' => $request->severity,
+        'description' => $request->description,
+        'date_recorded' => $request->date_recorded,
+        'notes' => $request->notes,
+    ]);
+
+    return response()->json($symptom, 201);
+}
 
     public function show($id)
     {
