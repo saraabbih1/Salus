@@ -1,27 +1,20 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\SymptomController;
 use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\Api\AppointmentController;
-use App\Http\Controllers\Api\AiHealthAdviceController;
+use App\Http\Controllers\Api\AIHealthAdviceController;
 
 // AUTH ROUTES
-
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
-});
-
-// PROTECTED ROUTES
-
-Route::middleware('auth:sanctum')->group(function () {
 
     // Symptoms
     Route::apiResource('symptoms', SymptomController::class);
@@ -35,15 +28,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('appointments', AppointmentController::class);
 
     // AI Health Advice
-    Route::post('/ai/health-advice', [AiHealthAdviceController::class, 'generateAdvice']);
-    Route::get('/ai/history', [AiHealthAdviceController::class, 'history']);
+    Route::post('/ai/health-advice', [AIHealthAdviceController::class, 'generate']);
+    Route::get('/ai/advices', [AIHealthAdviceController::class, 'index']);
 });
 
-
 // TEST ROUTE
-
 Route::get('/test', function () {
     return response()->json([
-        'message' => 'API is working '
+        'message' => 'API is working'
     ]);
 });
