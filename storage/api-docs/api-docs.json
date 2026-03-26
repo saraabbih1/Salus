@@ -1,0 +1,1896 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Salus API",
+        "description": "API documentation for the Salus health assistant application.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost",
+            "description": "Application server"
+        }
+    ],
+    "paths": {
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register a new user",
+                "description": "Creates a new user account and returns a Sanctum token.",
+                "operationId": "registerUser",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Sarra Bennani"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "sarra@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Password123!"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Password123!"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User registered successfully."
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "1|aLongSanctumTokenValue"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Sarra Bennani"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "format": "email",
+                                                    "example": "sarra@example.com"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2026-03-26T10:00:00.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2026-03-26T10:00:00.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "email": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The email has already been taken."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login a user",
+                "description": "Authenticates a user and returns a Sanctum token.",
+                "operationId": "loginUser",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "sarra@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Password123!"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login successful."
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "2|anotherSanctumTokenValue"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Sarra Bennani"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "format": "email",
+                                                    "example": "sarra@example.com"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid credentials."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout the authenticated user",
+                "description": "Revokes the current Sanctum access token.",
+                "operationId": "logoutUser",
+                "responses": {
+                    "200": {
+                        "description": "Logout successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logout successful."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/me": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get the authenticated user",
+                "description": "Returns the currently authenticated user profile.",
+                "operationId": "getAuthenticatedUser",
+                "responses": {
+                    "200": {
+                        "description": "Authenticated user returned successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Sarra Bennani"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "format": "email",
+                                                    "example": "sarra@example.com"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2026-03-26T10:00:00.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2026-03-26T10:00:00.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/symptoms": {
+            "get": {
+                "tags": [
+                    "Symptoms"
+                ],
+                "summary": "List the authenticated user's symptoms",
+                "operationId": "listSymptoms",
+                "responses": {
+                    "200": {
+                        "description": "Symptoms retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "user_id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Headache"
+                                                    },
+                                                    "severity": {
+                                                        "type": "string",
+                                                        "example": "moderate"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Throbbing pain on the left side."
+                                                    },
+                                                    "date_recorded": {
+                                                        "type": "string",
+                                                        "format": "date",
+                                                        "example": "2026-03-26"
+                                                    },
+                                                    "notes": {
+                                                        "type": "string",
+                                                        "example": "Gets worse in bright light."
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2026-03-26T08:00:00.000000Z"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2026-03-26T08:00:00.000000Z"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Symptoms"
+                ],
+                "summary": "Create a new symptom record",
+                "operationId": "storeSymptom",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "severity",
+                                    "date_recorded"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Headache"
+                                    },
+                                    "severity": {
+                                        "type": "string",
+                                        "example": "moderate",
+                                        "enum": [
+                                            "mild",
+                                            "moderate",
+                                            "severe"
+                                        ]
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Throbbing pain on the left side."
+                                    },
+                                    "date_recorded": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-03-26"
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "example": "Started after skipping lunch."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Symptom created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Symptom created successfully."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Headache"
+                                                },
+                                                "severity": {
+                                                    "type": "string",
+                                                    "example": "moderate"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Throbbing pain on the left side."
+                                                },
+                                                "date_recorded": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "2026-03-26"
+                                                },
+                                                "notes": {
+                                                    "type": "string",
+                                                    "example": "Started after skipping lunch."
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2026-03-26T08:00:00.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2026-03-26T08:00:00.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/symptoms/{id}": {
+            "get": {
+                "tags": [
+                    "Symptoms"
+                ],
+                "summary": "Get a single symptom",
+                "operationId": "showSymptom",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Symptom ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Symptom retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Headache"
+                                                },
+                                                "severity": {
+                                                    "type": "string",
+                                                    "example": "moderate"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Throbbing pain on the left side."
+                                                },
+                                                "date_recorded": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "2026-03-26"
+                                                },
+                                                "notes": {
+                                                    "type": "string",
+                                                    "example": "Gets worse in bright light."
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Symptom not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Symptom not found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Symptoms"
+                ],
+                "summary": "Update a symptom",
+                "operationId": "updateSymptom",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Symptom ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Headache"
+                                    },
+                                    "severity": {
+                                        "type": "string",
+                                        "example": "severe",
+                                        "enum": [
+                                            "mild",
+                                            "moderate",
+                                            "severe"
+                                        ]
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Pain is stronger than yesterday."
+                                    },
+                                    "date_recorded": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-03-26"
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "example": "Taking rest and drinking water."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Symptom updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Symptom updated successfully."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Headache"
+                                                },
+                                                "severity": {
+                                                    "type": "string",
+                                                    "example": "severe"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Pain is stronger than yesterday."
+                                                },
+                                                "date_recorded": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "2026-03-26"
+                                                },
+                                                "notes": {
+                                                    "type": "string",
+                                                    "example": "Taking rest and drinking water."
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Symptom not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Symptom not found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Symptoms"
+                ],
+                "summary": "Delete a symptom",
+                "operationId": "deleteSymptom",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Symptom ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Symptom deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Symptom deleted successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Symptom not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Symptom not found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/doctors": {
+            "get": {
+                "tags": [
+                    "Doctors"
+                ],
+                "summary": "List all doctors",
+                "operationId": "listDoctors",
+                "responses": {
+                    "200": {
+                        "description": "Doctors retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Dr. Youssef Amrani"
+                                                    },
+                                                    "specialty": {
+                                                        "type": "string",
+                                                        "example": "Cardiology"
+                                                    },
+                                                    "city": {
+                                                        "type": "string",
+                                                        "example": "Casablanca"
+                                                    },
+                                                    "yearsofexperience": {
+                                                        "type": "integer",
+                                                        "example": 12
+                                                    },
+                                                    "consultation_price": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 350
+                                                    },
+                                                    "available_days": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string",
+                                                            "example": "Monday"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/doctors/{id}": {
+            "get": {
+                "tags": [
+                    "Doctors"
+                ],
+                "summary": "Get a doctor by ID",
+                "operationId": "showDoctor",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Doctor ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Doctor retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Dr. Youssef Amrani"
+                                                },
+                                                "specialty": {
+                                                    "type": "string",
+                                                    "example": "Cardiology"
+                                                },
+                                                "city": {
+                                                    "type": "string",
+                                                    "example": "Casablanca"
+                                                },
+                                                "yearsofexperience": {
+                                                    "type": "integer",
+                                                    "example": 12
+                                                },
+                                                "consultation_price": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 350
+                                                },
+                                                "available_days": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Monday"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Doctor not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Doctor not found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/doctors/search": {
+            "get": {
+                "tags": [
+                    "Doctors"
+                ],
+                "summary": "Search doctors by specialty or city",
+                "operationId": "searchDoctors",
+                "parameters": [
+                    {
+                        "name": "specialty",
+                        "in": "query",
+                        "description": "Filter by specialty",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Cardiology"
+                        }
+                    },
+                    {
+                        "name": "city",
+                        "in": "query",
+                        "description": "Filter by city",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Casablanca"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Doctors search completed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Dr. Youssef Amrani"
+                                                    },
+                                                    "specialty": {
+                                                        "type": "string",
+                                                        "example": "Cardiology"
+                                                    },
+                                                    "city": {
+                                                        "type": "string",
+                                                        "example": "Casablanca"
+                                                    },
+                                                    "yearsofexperience": {
+                                                        "type": "integer",
+                                                        "example": 12
+                                                    },
+                                                    "consultation_price": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 350
+                                                    },
+                                                    "available_days": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string",
+                                                            "example": "Monday"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/appointments": {
+            "get": {
+                "tags": [
+                    "Appointments"
+                ],
+                "summary": "List the authenticated user's appointments",
+                "operationId": "listAppointments",
+                "responses": {
+                    "200": {
+                        "description": "Appointments retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "user_id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "doctor_id": {
+                                                        "type": "integer",
+                                                        "example": 2
+                                                    },
+                                                    "appointment_date": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2026-03-30T14:30:00.000000Z"
+                                                    },
+                                                    "status": {
+                                                        "type": "string",
+                                                        "example": "confirmed"
+                                                    },
+                                                    "notes": {
+                                                        "type": "string",
+                                                        "example": "Follow-up consultation."
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Appointments"
+                ],
+                "summary": "Create a new appointment",
+                "operationId": "storeAppointment",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "doctor_id",
+                                    "appointment_date"
+                                ],
+                                "properties": {
+                                    "doctor_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "appointment_date": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2026-03-30 14:30:00"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "pending",
+                                        "enum": [
+                                            "pending",
+                                            "confirmed",
+                                            "cancelled"
+                                        ]
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "example": "First consultation for recurring headaches."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Appointment created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Appointment created successfully."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "doctor_id": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "appointment_date": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2026-03-30T14:30:00.000000Z"
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "pending"
+                                                },
+                                                "notes": {
+                                                    "type": "string",
+                                                    "example": "First consultation for recurring headaches."
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/appointments/{id}": {
+            "get": {
+                "tags": [
+                    "Appointments"
+                ],
+                "summary": "Get a single appointment",
+                "operationId": "showAppointment",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Appointment ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Appointment retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "doctor_id": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "appointment_date": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2026-03-30T14:30:00.000000Z"
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "confirmed"
+                                                },
+                                                "notes": {
+                                                    "type": "string",
+                                                    "example": "Follow-up consultation."
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Appointment not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Appointment not found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Appointments"
+                ],
+                "summary": "Update an appointment",
+                "operationId": "updateAppointment",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Appointment ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "doctor_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "appointment_date": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2026-04-01 09:00:00"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "confirmed",
+                                        "enum": [
+                                            "pending",
+                                            "confirmed",
+                                            "cancelled"
+                                        ]
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "example": "Rescheduled after doctor confirmation."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Appointment updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Appointment updated successfully."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "doctor_id": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "appointment_date": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2026-04-01T09:00:00.000000Z"
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "confirmed"
+                                                },
+                                                "notes": {
+                                                    "type": "string",
+                                                    "example": "Rescheduled after doctor confirmation."
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Appointment not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Appointment not found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Appointments"
+                ],
+                "summary": "Delete an appointment",
+                "operationId": "deleteAppointment",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Appointment ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Appointment deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Appointment deleted successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Appointment not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Appointment not found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/ai/health-advice": {
+            "post": {
+                "tags": [
+                    "AI"
+                ],
+                "summary": "Generate AI health advice",
+                "description": "Generates general wellness advice based on the authenticated user's recent symptoms.",
+                "operationId": "generateHealthAdvice",
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "additional_context": {
+                                        "type": "string",
+                                        "example": "I have also been feeling tired for two days."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Health advice generated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Health advice generated successfully."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "advice": {
+                                                    "type": "string",
+                                                    "example": "Stay hydrated, rest well, and monitor your symptoms. If they worsen, contact a doctor."
+                                                },
+                                                "symptoms": {
+                                                    "type": "string",
+                                                    "example": "Headache, Fatigue"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2026-03-26T11:00:00.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "No symptoms found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No symptoms found for this user."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "AI service error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unable to generate health advice at the moment."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/ai/history": {
+            "get": {
+                "tags": [
+                    "AI"
+                ],
+                "summary": "Get AI advice history",
+                "operationId": "listHealthAdviceHistory",
+                "responses": {
+                    "200": {
+                        "description": "AI advice history retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "AI advice history retrieved successfully."
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "user_id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "advice": {
+                                                        "type": "string",
+                                                        "example": "Stay hydrated, rest well, and monitor your symptoms."
+                                                    },
+                                                    "symptoms": {
+                                                        "type": "string",
+                                                        "example": "Headache, Fatigue"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2026-03-26T11:00:00.000000Z"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2026-03-26T11:00:00.000000Z"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/test-swagger": {
+            "get": {
+                "tags": [
+                    "Test"
+                ],
+                "summary": "Test Swagger",
+                "operationId": "4c92f594a6409c28dfdd6f08243325f1",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "description": "Use a Sanctum bearer token. Example: Bearer 1|abcdef...",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "AI",
+            "description": "AI"
+        },
+        {
+            "name": "Appointments",
+            "description": "Appointments"
+        },
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Doctors",
+            "description": "Doctors"
+        },
+        {
+            "name": "Symptoms",
+            "description": "Symptoms"
+        },
+        {
+            "name": "Test",
+            "description": "Test"
+        }
+    ]
+}
